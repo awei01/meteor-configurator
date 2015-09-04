@@ -52,7 +52,7 @@ Agent.query = function(data) {
 ## API ##
 
 ### MeteorConfigurator([`object` data]) ###
-(constructor) Instantiate a new configurator instance.
+(constructor) Instantiate a new configurator instance. If no params are passed, the instance will have an empty object for its configuration data. 
 ```
 var configs = new MeteorConfigurator({ foo: "foo value", "bar.baz": "bar baz value", boo: { bee: "boo bee value" } });
 console.log(configs.all());
