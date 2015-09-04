@@ -17,10 +17,10 @@ var expected = {
 		}
 	};
 
-describe('Configurator instantiated with no params', function() {
+describe('MeteorConfigurator instantiated with no params', function() {
 	var configs;
 	beforeEach(function() {
-		configs = new Configurator();
+		configs = new MeteorConfigurator();
 	});
 	it('.all() should return empty object', function() {
 		assert(_.isEqual(configs.all(), {}), '.all() returns empty object');
@@ -57,17 +57,17 @@ describe('Configurator instantiated with no params', function() {
 	});
 
 	it('when instantiated more than once, each instance behaves independently', function() {
-		var configs2 = new Configurator({ foo: "foo 2"});
+		var configs2 = new MeteorConfigurator({ foo: "foo 2"});
 		configs.set('foo', 'foo 1');
 		assert.equal(configs.get('foo'), 'foo 1');
 		assert.equal(configs2.get('foo'), 'foo 2');
 	});
 
 });
-describe('Configurator instantiated with complex object', function() {
+describe('MeteorConfigurator instantiated with complex object', function() {
 
 	it('when instantiated with complex object, .all() should return correctly nested object', function() {
-		var	configs = new Configurator(data);
+		var	configs = new MeteorConfigurator(data);
 		assert(_.isEqual(configs.all(), expected), '.all() returns correctly formatted object');
 	});
 

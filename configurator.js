@@ -1,18 +1,18 @@
 'use strict';
 
-Configurator = function(data) {
+function Config (data) {
 	this.__data = {};
 	if (data) {
 		this.set(data);
 	}
 };
-Configurator.prototype.all = function() {
+Config.prototype.all = function() {
 	return _.extend({}, this.__data);
 };
-Configurator.prototype.get = function(key) {
+Config.prototype.get = function(key) {
 	return deep(this.__data, key);
 };
-Configurator.prototype.set = function(key, value) {
+Config.prototype.set = function(key, value) {
 	var me = this;
 	if (_.isObject(key)) {
 		_.each(key, function(v, k) {
@@ -44,3 +44,5 @@ function deep(object, key, value) {
 		return value;
 	}
 }
+
+MeteorConfigurator = Config;
