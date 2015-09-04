@@ -51,7 +51,7 @@ Agent.query = function(data) {
 
 ## API ##
 
-### `MeteorConfigurator([object])` ###
+### MeteorConfigurator([`object` data]) ###
 (constructor) Instantiate a new configurator instance.
 ```
 var configs = new MeteorConfigurator({ foo: "foo value", "bar.baz": "bar baz value", boo: { bee: "boo bee value" } });
@@ -88,8 +88,9 @@ Hasn't changed...
 	foo: "foo value"
 }
 -->
+```
 
-### .set(keyOrObject, [value]) ###
+### .set(`string|object` key, [`mixed` value]) ###
 * If key and value passed set key with value in the configs.
 * If the key has periods `.` deeply set the key with a value.
 * If first param is an object, then deeply extend the configs object.
