@@ -7,11 +7,11 @@ function Config (data) {
 		this.set(data);
 	}
 };
-Config.prototype.all = function() {
-	return _.extend({}, this.__data);
+Config.prototype.all = function(data) {
+	return deepExtend({}, this.__data, data);
 };
 Config.prototype.get = function(key) {
-	return deep(this.__data, key);
+	return deepGetOrSet(this.__data, key);
 };
 Config.prototype.set = function(key, value) {
 	var me = this;
@@ -20,12 +20,14 @@ Config.prototype.set = function(key, value) {
 	}
 	if (_.isObject(key)) {
 		deepExtend(this.__data, key);
-		return;
 	}
-	deep(this.__data, key, value);
+	else {
+		deepGetOrSet(this.__data, key, value);
+	}
+	return this;
 };
 
-function deep(object, key, value) {
+function deepGetOrSet(object, key, value) {
 	var keys = key.split('.'), i = 0, len = keys.length,
 		root;
 	if (arguments.length > 2) {
@@ -41,7 +43,7 @@ function deep(object, key, value) {
 		while ((object = object[keys[i++]]) != null && i < len) {};
 		value = i < len ? void 0 : object;
 		if (_.isObject(value)) {
-			value = _.extend({}, value);
+			value = deepExtend({}, value);
 		}
 		return value;
 	}

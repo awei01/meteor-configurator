@@ -66,8 +66,8 @@ console.log(configs.all());
 -->
 ```
 
-### `.all()` ###
-Retrieve a cloned object with all the configuration data. Modifications to the result of this method will not alter your configuration data.
+### .all([`object` data]) -> `object` ###
+Retrieve a cloned object with all the configuration data. Modifications to the result of this method will not alter your configuration data. If object parameter is passed, it will deep extend current configuration with parameter.
 ```
 var configs = new MeteorConfigurator({ foo: "foo value" });
 var data = configs.all();
@@ -85,13 +85,21 @@ Hasn't changed...
 	foo: "foo value"
 }
 -->
+console.log(configs.all({ bar: "bar value" }));
+<!--
+{
+	foo: "foo value",
+	bar: "bar value",
+}
+-->
 ```
 
-### .set(`string|object|instance` key, [`mixed` value]) ###
+### .set(`string|object|instance` key, [`mixed` value]) -> instance ###
 * If key and value passed set key with value in the configs.
 * If the key has periods `.` deeply set the key with a value.
 * If first param is an object, then deeply extend the configs object.
 * If first param is MeteorConfigurator instance, get the data out of it and then deeply extend the configs object.
+Method returns itself to allow for chaning.
 
 ```
 var configs = new MeteorConfigurator({ foo: "foo value" });
@@ -133,7 +141,7 @@ console.log(configs.all());
 }
 -->
 
-### .get(key) ###
+### .get(key) -> `mixed` ###
 Retrieve a value by key using dot notation. If key has not been defined, returns undefined. If an object is returned, it will be a clone so modifying the result of `.get()` will not affect configurations.
 
 ```
