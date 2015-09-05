@@ -51,7 +51,7 @@ Agent.query = function(data) {
 
 ## API ##
 
-### MeteorConfigurator([`object` data]) ###
+### MeteorConfigurator([`object|instance` data]) ###
 (constructor) Instantiate a new configurator instance. If no params are passed, the instance will have an empty object for its configuration data.
 ```
 var configs = new MeteorConfigurator({ foo: "foo value", bar: { baz: "bar baz value" } });
@@ -66,7 +66,7 @@ console.log(configs.all());
 -->
 ```
 
-### .all([`object` data]) -> `object` ###
+### .all([`object|instance` data]) -> `object` ###
 Retrieve a cloned object with all the configuration data. Modifications to the result of this method will not alter your configuration data. If object parameter is passed, it will deep extend current configuration with parameter.
 ```
 var configs = new MeteorConfigurator({ foo: "foo value" });

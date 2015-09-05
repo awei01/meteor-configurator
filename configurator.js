@@ -4,10 +4,12 @@ var deepExtend = Npm.require('deep-extend');
 function Config (data) {
 	this.__data = {};
 	if (data) {
+		data = extractObjectIfInstance(data);
 		this.set(data);
 	}
 };
 Config.prototype.all = function(data) {
+	data = extractObjectIfInstance(data);
 	return deepExtend({}, this.__data, data);
 };
 Config.prototype.get = function(key) {
@@ -15,9 +17,7 @@ Config.prototype.get = function(key) {
 };
 Config.prototype.set = function(key, value) {
 	var me = this;
-	if (key instanceof Config) {
-		key = key.all();
-	}
+	key = extractObjectIfInstance(key);
 	if (_.isObject(key)) {
 		deepExtend(this.__data, key);
 	}
@@ -25,6 +25,13 @@ Config.prototype.set = function(key, value) {
 		deepGetOrSet(this.__data, key, value);
 	}
 	return this;
+};
+
+function extractObjectIfInstance(item) {
+	if (item instanceof Config) {
+		item = item.all();
+	}
+	return item;
 };
 
 function deepGetOrSet(object, key, value) {

@@ -2,7 +2,7 @@
 
 Package.describe({
   name: 'awei01:meteor-configurator',
-  version: '0.0.4',
+  version: '0.0.5',
   // Brief, one-line summary of the package.
   summary: 'Simple configuration set/get manager.',
   // URL to the Git repository containing the source code for this package.

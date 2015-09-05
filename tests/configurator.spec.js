@@ -1,6 +1,7 @@
 'use strict';
 
-var data = {
+function makeData() {
+	return {
 		foo: "foo value",
 		bar: {
 			baz: "bar baz value",
@@ -8,22 +9,30 @@ var data = {
 		boo: {
 			bee: "boo bee value"
 		}
-	};
+	}
+};
 
 describe('MeteorConfigurator.all()', function() {
 	var configs;
 	beforeEach(function() {
-		configs = new MeteorConfigurator(data);
+		configs = new MeteorConfigurator(makeData());
 	});
 	it('.all() returns deep cloned object that does not modify instance', function() {
 		var result = configs.all();
 		result.bar.bap = 'bar bap value';
-		assert.deepEqual(configs.all(), data);
+		assert.deepEqual(configs.all(), makeData());
 	});
 	it('.all() with object returns deep extended object', function() {
-		var expected = _.clone(data);
+		var expected = makeData();
 		expected.bar.bap = "bar bap value";
 		var result = configs.all({ bar: { bap: "bar bap value" } });
+		assert.deepEqual(result, expected);
+	});
+	it('.all() with instance returns deep extended object', function() {
+		var expected = makeData();
+		expected.bar.bap = "bar bap value";
+		var configs2 = new MeteorConfigurator({ bar: { bap: "bar bap value" } });
+		var result = configs.all(configs2);
 		assert.deepEqual(result, expected);
 	});
 });
@@ -46,13 +55,14 @@ describe('MeteorConfigurator.set()', function() {
 		assert.deepEqual(configs.all(), { foo: { bar: { baz: "foo bar baz value" } } });
 	});
 	it('.set() with object sets .all() with nested object', function() {
+		var data = makeData();
 		configs.set(data);
 		assert.deepEqual(configs.all(), data);
 	});
 	it('.set() when data already set and passed object, deep extends object', function() {
-		configs.set(data);
+		configs.set(makeData());
 		configs.set({ bar: { bap: "new bar bap value" }, zoo: "new zoo value" });
-		var expected = _.clone(data);
+		var expected = makeData();
 		expected.bar.bap = 'new bar bap value';
 		expected.zoo = "new zoo value";
 		// console.log(expected);
@@ -60,10 +70,10 @@ describe('MeteorConfigurator.set()', function() {
 		assert.deepEqual(configs.all(), expected);
 	});
 	it('.set() when data already set and passed instance of MeteorConfigurator, deep extends object', function() {
-		configs.set(data);
+		configs.set(makeData());
 		var configs2 = new MeteorConfigurator({ bar: { bap: "new bar bap value" }, zoo: "new zoo value" });
 		configs.set(configs2);
-		var expected = _.clone(data);
+		var expected = makeData();
 		expected.bar.bap = 'new bar bap value';
 		expected.zoo = "new zoo value";
 		// console.log(expected);
@@ -105,7 +115,15 @@ describe('MeteorConfigurator instantiation', function() {
 		assert.equal(configs2.get('foo'), 'foo 2');
 	});
 	it('when instantiated with complex object, .all() should return correctly nested object', function() {
+		var data = makeData();
 		var	configs = new MeteorConfigurator(data);
 		assert.deepEqual(configs.all(), data);
+	});
+	it('when instantiated with another instance, .all() should return independent instance', function() {
+		var	configs = new MeteorConfigurator(makeData()),
+			configs2 = new MeteorConfigurator(configs);
+		configs2.set('bar.baz', 'updated bar baz value');
+		assert.equal(configs.get('bar.baz'), 'bar baz value');
+		assert.equal(configs2.get('bar.baz'), 'updated bar baz value');
 	});
 });
