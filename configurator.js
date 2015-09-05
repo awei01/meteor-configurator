@@ -1,4 +1,5 @@
 'use strict';
+var deepExtend = Npm.require('deep-extend');
 
 function Config (data) {
 	this.__data = {};
@@ -14,10 +15,11 @@ Config.prototype.get = function(key) {
 };
 Config.prototype.set = function(key, value) {
 	var me = this;
+	if (key instanceof Config) {
+		key = key.all();
+	}
 	if (_.isObject(key)) {
-		_.each(key, function(v, k) {
-			me.set(k, v);
-		});
+		deepExtend(this.__data, key);
 		return;
 	}
 	deep(this.__data, key, value);

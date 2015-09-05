@@ -1,6 +1,6 @@
 # Meteor Configurator #
 
-Simple package to help manage a configuration object. You can get/set keys and values in an object and `Configurator` will help manage those items.
+*Server Only* Simple package to help manage a configuration object. You can get/set keys and values in an object and `Configurator` will help manage those items.
 
 ## Motivation ##
 
@@ -52,18 +52,15 @@ Agent.query = function(data) {
 ## API ##
 
 ### MeteorConfigurator([`object` data]) ###
-(constructor) Instantiate a new configurator instance. If no params are passed, the instance will have an empty object for its configuration data. 
+(constructor) Instantiate a new configurator instance. If no params are passed, the instance will have an empty object for its configuration data.
 ```
-var configs = new MeteorConfigurator({ foo: "foo value", "bar.baz": "bar baz value", boo: { bee: "boo bee value" } });
+var configs = new MeteorConfigurator({ foo: "foo value", bar: { baz: "bar baz value" } });
 console.log(configs.all());
 <!--
 {
 	foo: "foo value",
 	bar: {
 		baz: "bar baz value"
-	},
-	boo: {
-		bee: "boo bee value"
 	},
 }
 -->
@@ -90,10 +87,11 @@ Hasn't changed...
 -->
 ```
 
-### .set(`string|object` key, [`mixed` value]) ###
+### .set(`string|object|instance` key, [`mixed` value]) ###
 * If key and value passed set key with value in the configs.
 * If the key has periods `.` deeply set the key with a value.
 * If first param is an object, then deeply extend the configs object.
+* If first param is MeteorConfigurator instance, get the data out of it and then deeply extend the configs object.
 
 ```
 var configs = new MeteorConfigurator({ foo: "foo value" });
@@ -120,13 +118,14 @@ console.log(configs.all());
 	}
 }
 -->
-configs.set({ boo: { bee: "boo bee value" } });
+configs.set({ bar: { bap: "bar bap value" }, boo: { bee: "boo bee value" } });
 console.log(configs.all());
 <!--
 {
 	foo: "new foo value",
 	bar: {
-		baz: "bar baz value"
+		baz: "bar baz value",
+		bap: "bar bap value"
 	},
 	boo: {
 		bee: "boo bee value"
@@ -138,7 +137,7 @@ console.log(configs.all());
 Retrieve a value by key using dot notation. If key has not been defined, returns undefined. If an object is returned, it will be a clone so modifying the result of `.get()` will not affect configurations.
 
 ```
-var configs = new MeteorConfigurator({ foo: "foo value", "bar.baz": "bar baz value" });
+var configs = new MeteorConfigurator({ foo: "foo value", bar: { baz: "bar baz value" } } );
 console.log(configs.get('foo'));
 // 'foo value'
 console.log(configs.get('bar.baz'));

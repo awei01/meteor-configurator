@@ -2,15 +2,8 @@
 
 var data = {
 		foo: "foo value",
-		"bar.baz": "bar baz value",
-		boo: {
-			bee: "boo bee value"
-		}
-	};
-var expected = {
-		foo: "foo value",
 		bar: {
-			baz: "bar baz value"
+			baz: "bar baz value",
 		},
 		boo: {
 			bee: "boo bee value"
@@ -38,8 +31,29 @@ describe('MeteorConfigurator instantiated with no params', function() {
 		configs.set('foo.bar.baz', 'foo bar baz value');
 		assert(_.isEqual(configs.all(), { foo: { bar: { baz: "foo bar baz value" } } }), '.all() returns correct object');
 	});
-	it('.set() with complex object sets .all() with correctly nested object', function() {
+	it('.set() with object sets .all() with nested object', function() {
 		configs.set(data);
+		assert(_.isEqual(configs.all(), data), '.all() returns correct object');
+	});
+	it('.set() when data already set and passed object, deep extends object', function() {
+		configs.set(data);
+		configs.set({ bar: { bap: "new bar bap value" }, zoo: "new zoo value" });
+		var expected = _.extend({}, data);
+		expected.bar.bap = 'new bar bap value';
+		expected.zoo = "new zoo value";
+		// console.log(expected);
+		// console.log(configs.all());
+		assert(_.isEqual(configs.all(), expected), '.all() returns correct object');
+	});
+	it('.set() when data already set and passed instance of MeteorConfigurator, deep extends object', function() {
+		configs.set(data);
+		var configs2 = new MeteorConfigurator({ bar: { bap: "new bar bap value" }, zoo: "new zoo value" });
+		configs.set(configs2);
+		var expected = _.extend({}, data);
+		expected.bar.bap = 'new bar bap value';
+		expected.zoo = "new zoo value";
+		// console.log(expected);
+		// console.log(configs.all());
 		assert(_.isEqual(configs.all(), expected), '.all() returns correct object');
 	});
 	it('.get() with undefined key returns undefined', function() {
@@ -68,7 +82,7 @@ describe('MeteorConfigurator instantiated with complex object', function() {
 
 	it('when instantiated with complex object, .all() should return correctly nested object', function() {
 		var	configs = new MeteorConfigurator(data);
-		assert(_.isEqual(configs.all(), expected), '.all() returns correctly formatted object');
+		assert(_.isEqual(configs.all(), data), '.all() returns correctly formatted object');
 	});
 
 });
